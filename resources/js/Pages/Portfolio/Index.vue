@@ -13,7 +13,13 @@ const { isDark } = useTheme();
 </script>
 
 <template>
-    <Head title="Portfolio — Ajay Upadhyay | DevOps & Cloud Engineer" />
+    <Head title="Portfolio — Ajay Upadhyay | DevOps & Cloud Engineer">
+        <meta
+            head-key="description"
+            name="description"
+            content="Portfolio of Ajay Upadhyay — DevOps and cloud engineer. Certifications, toolbox, architecture experience across AWS, Azure, Kubernetes, IaC and observability."
+        />
+    </Head>
 
     <div
         class="relative min-h-screen overflow-hidden text-white antialiased transition-colors duration-300"

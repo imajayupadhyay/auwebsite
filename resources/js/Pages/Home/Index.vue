@@ -11,7 +11,13 @@ import Services from './components/Services.vue';
 </script>
 
 <template>
-    <Head title="Ajay Upadhyay — DevOps Instructor & Cloud Architect" />
+    <Head title="Ajay Upadhyay — DevOps Instructor & Cloud Architect">
+        <meta
+            head-key="description"
+            name="description"
+            content="DevOps instructor and cloud architect. Production-grade courses, fixed-price engineering services, and hands-on labs covering AWS, Azure, Kubernetes, Docker, Terraform and CI/CD."
+        />
+    </Head>
 
     <div
         class="relative min-h-screen overflow-hidden text-white antialiased transition-colors duration-300"

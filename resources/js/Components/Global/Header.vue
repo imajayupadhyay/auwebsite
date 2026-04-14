@@ -42,8 +42,7 @@ const nav = [
     { label: 'Home',      href: '/',          type: 'route' },
     { label: 'Courses',   href: '/courses',   type: 'route' },
     { label: 'Portfolio', href: '/portfolio', type: 'route' },
-    { label: 'Services',  href: '/#services', type: 'hash', section: 'services' },
-    { label: 'Contact',   href: '/#contact',  type: 'hash', section: 'contact' },
+    { label: 'Services',  href: '/services',  type: 'route' },
 ];
 
 // Strip query/hash so "/courses?foo=1" still matches "/courses"

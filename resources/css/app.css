@@ -151,6 +151,7 @@ html.light [class~="text-white/75"] { color: rgba(15, 23, 42, 0.84); }
 html.light [class~="text-white/70"] { color: rgba(15, 23, 42, 0.78); }
 html.light [class~="text-white/65"] { color: rgba(15, 23, 42, 0.72); }
 html.light [class~="text-white/60"] { color: rgba(15, 23, 42, 0.68); }
+html.light [class~="text-white/55"] { color: rgba(15, 23, 42, 0.64); }
 html.light [class~="text-white/50"] { color: rgba(15, 23, 42, 0.56); }
 html.light [class~="text-white/45"] { color: rgba(15, 23, 42, 0.52); }
 html.light [class~="text-white/40"] { color: rgba(15, 23, 42, 0.48); }

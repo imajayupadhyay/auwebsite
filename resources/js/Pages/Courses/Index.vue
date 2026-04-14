@@ -54,7 +54,13 @@ const totalModules = allCourses.reduce((s, c) => s + c.modules, 0);
 </script>
 
 <template>
-    <Head title="Courses — Ajay Upadhyay" />
+    <Head title="Courses — Ajay Upadhyay">
+        <meta
+            head-key="description"
+            name="description"
+            content="Hands-on DevOps and cloud courses — AWS, Azure, Kubernetes, Docker, Terraform, Jenkins and CI/CD. Project-based curriculum built for production-ready engineers."
+        />
+    </Head>
 
     <div
         class="relative min-h-screen overflow-hidden text-white antialiased transition-colors duration-300"

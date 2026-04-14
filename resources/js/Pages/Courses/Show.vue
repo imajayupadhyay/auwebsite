@@ -51,7 +51,17 @@ const ease = [0.22, 1, 0.36, 1];
 </script>
 
 <template>
-    <Head :title="course ? `${course.title} — Ajay Upadhyay` : 'Course not found'" />
+    <Head :title="course ? `${course.title} — Ajay Upadhyay` : 'Course not found'">
+        <meta
+            head-key="description"
+            name="description"
+            :content="course
+                ? (course.subtitle
+                    ? `${course.subtitle} — hands-on ${course.title} course by Ajay Upadhyay.`
+                    : `${course.title} — hands-on DevOps and cloud course by Ajay Upadhyay.`)
+                : 'Course not found — browse all DevOps and cloud courses by Ajay Upadhyay.'"
+        />
+    </Head>
 
     <div
         class="relative min-h-screen overflow-hidden text-white antialiased transition-colors duration-300"
