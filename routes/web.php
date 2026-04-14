@@ -14,6 +14,10 @@ Route::get('/courses', function (Request $request) {
     ]);
 });
 
+Route::get('/portfolio', function () {
+    return Inertia::render('Portfolio/Index');
+});
+
 Route::get('/courses/{slug}', function (string $slug) {
     return Inertia::render('Courses/Show', ['slug' => $slug]);
 })->where('slug', '[a-z0-9-]+');

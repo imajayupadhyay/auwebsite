@@ -39,11 +39,11 @@ watch(mobileOpen, (val) => {
 const close = () => { mobileOpen.value = false; };
 
 const nav = [
-    { label: 'Home',     href: '/',         type: 'route' },
-    { label: 'Courses',  href: '/courses',  type: 'route' },
-    { label: 'Services', href: '/#services', type: 'hash', section: 'services' },
-    { label: 'About',    href: '/#about',    type: 'hash', section: 'about' },
-    { label: 'Contact',  href: '/#contact',  type: 'hash', section: 'contact' },
+    { label: 'Home',      href: '/',          type: 'route' },
+    { label: 'Courses',   href: '/courses',   type: 'route' },
+    { label: 'Portfolio', href: '/portfolio', type: 'route' },
+    { label: 'Services',  href: '/#services', type: 'hash', section: 'services' },
+    { label: 'Contact',   href: '/#contact',  type: 'hash', section: 'contact' },
 ];
 
 // Strip query/hash so "/courses?foo=1" still matches "/courses"
