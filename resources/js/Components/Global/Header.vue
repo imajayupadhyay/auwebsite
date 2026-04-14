@@ -1,11 +1,12 @@
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { ref, watch, computed, onMounted, onUnmounted } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
 import { motion } from 'motion-v';
 import { useTheme } from '@/composables/useTheme';
 
 const { isDark, setDark, setLight } = useTheme();
 
+const page        = usePage();
 const scrolled    = ref(false);
 const mobileOpen  = ref(false);
 
@@ -28,12 +29,21 @@ watch(mobileOpen, (val) => {
 const close = () => { mobileOpen.value = false; };
 
 const nav = [
-    { label: 'Home',     href: '#home' },
-    { label: 'Courses',  href: '#courses' },
-    { label: 'Services', href: '#services' },
-    { label: 'About',    href: '#about' },
-    { label: 'Contact',  href: '#contact' },
+    { label: 'Home',     href: '/',         type: 'route' },
+    { label: 'Courses',  href: '/courses',  type: 'route' },
+    { label: 'Services', href: '/#services', type: 'hash', section: 'services' },
+    { label: 'About',    href: '/#about',    type: 'hash', section: 'about' },
+    { label: 'Contact',  href: '/#contact',  type: 'hash', section: 'contact' },
 ];
+
+// Strip query/hash so "/courses?foo=1" still matches "/courses"
+const currentPath = computed(() => (page.url || '/').split('?')[0].split('#')[0]);
+
+const isActive = (item) => {
+    if (item.type !== 'route') return false;
+    if (item.href === '/') return currentPath.value === '/';
+    return currentPath.value === item.href || currentPath.value.startsWith(item.href + '/');
+};
 </script>
 
 <template>
@@ -79,15 +89,26 @@ const nav = [
 
                 <!-- Desktop nav -->
                 <nav class="hidden items-center gap-1 lg:flex">
-                    <a
+                    <component
                         v-for="item in nav"
                         :key="item.label"
+                        :is="item.type === 'route' ? Link : 'a'"
                         :href="item.href"
-                        class="group relative rounded-xl px-4 py-2 text-sm font-medium text-white/70 transition hover:text-white"
+                        :class="[
+                            'group relative rounded-xl px-4 py-2 text-sm font-medium transition',
+                            isActive(item) ? 'text-white' : 'text-white/70 hover:text-white',
+                        ]"
                     >
                         <span class="relative z-10">{{ item.label }}</span>
-                        <span class="absolute inset-0 rounded-xl bg-white/5 opacity-0 transition group-hover:opacity-100"></span>
-                    </a>
+                        <span
+                            class="absolute inset-0 rounded-xl bg-white/5 transition"
+                            :class="isActive(item) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"
+                        ></span>
+                        <span
+                            v-if="isActive(item)"
+                            class="pointer-events-none absolute inset-x-3 -bottom-px h-px bg-gradient-to-r from-transparent via-cyan-300 to-transparent"
+                        ></span>
+                    </component>
                 </nav>
 
                 <!-- Actions -->
@@ -179,19 +200,35 @@ const nav = [
 
                 <!-- Nav links -->
                 <nav class="flex flex-1 flex-col gap-1 overflow-y-auto p-4">
-                    <a
+                    <component
                         v-for="(item, i) in nav"
                         :key="item.label"
+                        :is="item.type === 'route' ? Link : 'a'"
                         :href="item.href"
                         @click="close"
-                        class="group flex items-center justify-between rounded-xl px-4 py-3.5 text-[15px] font-medium text-white/75 transition hover:bg-white/5 hover:text-white"
+                        :class="[
+                            'group flex items-center justify-between rounded-xl px-4 py-3.5 text-[15px] font-medium transition',
+                            isActive(item)
+                                ? 'bg-white/10 text-white ring-1 ring-cyan-300/20'
+                                : 'text-white/75 hover:bg-white/5 hover:text-white',
+                        ]"
                         :style="{ transitionDelay: mobileOpen ? `${i * 40}ms` : '0ms' }"
                     >
-                        {{ item.label }}
-                        <svg class="h-3.5 w-3.5 text-white/25 transition group-hover:text-white/50 group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="none">
+                        <span class="flex items-center gap-2">
+                            <span
+                                v-if="isActive(item)"
+                                class="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.8)]"
+                            ></span>
+                            {{ item.label }}
+                        </span>
+                        <svg
+                            class="h-3.5 w-3.5 transition group-hover:translate-x-0.5"
+                            :class="isActive(item) ? 'text-cyan-300' : 'text-white/25 group-hover:text-white/50'"
+                            viewBox="0 0 20 20" fill="none"
+                        >
                             <path d="M4 10h12m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                    </a>
+                    </component>
                 </nav>
 
                 <!-- Footer CTA -->

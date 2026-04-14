@@ -77,7 +77,7 @@ const ease = [0.22, 1, 0.36, 1];
                         class="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl px-6 py-3.5 text-sm font-semibold transition"
                         :class="isDark
                             ? 'bg-white text-ink-900 shadow-[0_20px_50px_-12px_rgba(34,211,238,0.5)] hover:shadow-[0_20px_60px_-12px_rgba(34,211,238,0.7)]'
-                            : 'bg-indigo-600 text-white shadow-[0_20px_50px_-12px_rgba(99,102,241,0.45)] hover:shadow-[0_20px_60px_-12px_rgba(99,102,241,0.65)] hover:bg-indigo-500'"
+                            : 'bg-indigo-600 text-[#ffffff] shadow-[0_20px_50px_-12px_rgba(99,102,241,0.45)] hover:shadow-[0_20px_60px_-12px_rgba(99,102,241,0.65)] hover:bg-indigo-500'"
                     >
                         <span>Browse Courses</span>
                         <svg class="h-4 w-4 transition group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="none">
