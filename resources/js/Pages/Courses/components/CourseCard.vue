@@ -1,5 +1,6 @@
 <script setup>
 import { motion } from 'motion-v';
+import { Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 
 defineProps({
@@ -26,6 +27,14 @@ defineProps({
             v-if="course.available"
             class="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
             :style="{ background: `radial-gradient(380px circle at 50% 0%, ${course.dot}20, transparent 65%)` }"
+        />
+
+        <!-- Stretched link for available courses -->
+        <Link
+            v-if="course.available"
+            :href="`/courses/${course.slug}`"
+            class="absolute inset-0 z-10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-300/40"
+            :aria-label="`View ${course.title} course`"
         />
 
         <!-- Top row -->

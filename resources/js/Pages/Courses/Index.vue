@@ -7,99 +7,16 @@ import Footer      from '@/Components/Global/Footer.vue';
 import SearchFilters from './components/SearchFilters.vue';
 import CourseCard    from './components/CourseCard.vue';
 import { useTheme } from '@/composables/useTheme';
+import { courses as allCourses } from '@/data/courses';
+
+const props = defineProps({
+    search: { type: String, default: '' },
+});
 
 const { isDark } = useTheme();
 
-// ── Course data ────────────────────────────────────────────
-const allCourses = [
-    {
-        code: 'AZ-01',
-        title: 'Microsoft Azure',
-        subtitle: 'Resilient systems on the Azure platform',
-        level: 'Intermediate',
-        modules: 12,
-        hours: 32,
-        dot: '#0078D4',
-        icon: 'logos:microsoft-azure',
-        available: true,
-        category: 'Cloud',
-        slug: 'microsoft-azure',
-        tags: ['AKS', 'Azure DevOps', 'Functions', 'CosmosDB', 'ARM'],
-    },
-    {
-        code: 'AWS-01',
-        title: 'AWS Cloud',
-        subtitle: 'From EC2 to EKS — production patterns',
-        level: 'Intermediate',
-        modules: 14,
-        hours: 38,
-        dot: '#FF9900',
-        icon: 'logos:aws',
-        available: false,
-        category: 'Cloud',
-        slug: 'aws-cloud',
-        tags: ['EC2', 'EKS', 'Lambda', 'S3', 'RDS'],
-    },
-    {
-        code: 'GCP-01',
-        title: 'Google Cloud',
-        subtitle: 'GCP for engineers who want to ship',
-        level: 'Beginner',
-        modules: 10,
-        hours: 26,
-        dot: '#4285F4',
-        icon: 'logos:google-cloud',
-        available: false,
-        category: 'Cloud',
-        slug: 'google-cloud',
-        tags: ['GKE', 'Cloud Run', 'BigQuery', 'Pub/Sub', 'IAM'],
-    },
-    {
-        code: 'K8S-01',
-        title: 'Docker & Kubernetes',
-        subtitle: 'Container orchestration at scale',
-        level: 'Advanced',
-        modules: 16,
-        hours: 44,
-        dot: '#326CE5',
-        icon: 'logos:kubernetes',
-        available: false,
-        category: 'Containers',
-        slug: 'docker-kubernetes',
-        tags: ['Docker', 'Helm', 'Operators', 'Service Mesh', 'RBAC'],
-    },
-    {
-        code: 'JNK-01',
-        title: 'Jenkins CI/CD',
-        subtitle: 'Pipelines that stay green at 2 AM',
-        level: 'All levels',
-        modules: 9,
-        hours: 22,
-        dot: '#D33833',
-        icon: 'logos:jenkins',
-        available: false,
-        category: 'CI/CD',
-        slug: 'jenkins-cicd',
-        tags: ['Pipelines', 'Shared Libraries', 'Groovy', 'Blue Ocean', 'Docker'],
-    },
-    {
-        code: 'TF-01',
-        title: 'Terraform',
-        subtitle: 'Infrastructure as code, done right',
-        level: 'Intermediate',
-        modules: 11,
-        hours: 28,
-        dot: '#7B42BC',
-        icon: 'logos:terraform-icon',
-        available: false,
-        category: 'IaC',
-        slug: 'terraform',
-        tags: ['HCL', 'Modules', 'State', 'Workspaces', 'Atlantis'],
-    },
-];
-
 // ── Filter state ───────────────────────────────────────────
-const search         = ref('');
+const search         = ref(props.search);
 const activeCategory = ref('All');
 const activeLevel    = ref('All');
 

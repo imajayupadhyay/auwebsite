@@ -1,5 +1,6 @@
 <script setup>
 import { motion } from 'motion-v';
+import { Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 
 const courses = [
@@ -13,6 +14,7 @@ const courses = [
         dot: '#0078D4',
         icon: 'logos:microsoft-azure',
         available: true,
+        slug: 'microsoft-azure',
     },
     {
         code: 'AWS-01',
@@ -24,6 +26,7 @@ const courses = [
         dot: '#FF9900',
         icon: 'logos:aws',
         available: false,
+        slug: 'aws-cloud',
     },
     {
         code: 'GCP-01',
@@ -35,6 +38,7 @@ const courses = [
         dot: '#4285F4',
         icon: 'logos:google-cloud',
         available: false,
+        slug: 'google-cloud',
     },
     {
         code: 'K8S-01',
@@ -46,6 +50,7 @@ const courses = [
         dot: '#326CE5',
         icon: 'logos:kubernetes',
         available: false,
+        slug: 'docker-kubernetes',
     },
     {
         code: 'JNK-01',
@@ -57,6 +62,7 @@ const courses = [
         dot: '#D33833',
         icon: 'logos:jenkins',
         available: false,
+        slug: 'jenkins-cicd',
     },
     {
         code: 'TF-01',
@@ -68,6 +74,7 @@ const courses = [
         dot: '#7B42BC',
         icon: 'logos:terraform-icon',
         available: false,
+        slug: 'terraform',
     },
 ];
 </script>
@@ -118,6 +125,13 @@ const courses = [
                         class="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
                         :style="{ background: `radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), ${c.dot}22, transparent 60%)` }"
                     ></div>
+
+                    <Link
+                        v-if="c.available"
+                        :href="`/courses/${c.slug}`"
+                        class="absolute inset-0 z-10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-300/40"
+                        :aria-label="`View ${c.title} course`"
+                    />
 
                     <div class="relative flex items-start justify-between">
                         <div class="grid h-12 w-12 place-items-center rounded-xl border border-white/10 bg-white/5">

@@ -1,10 +1,20 @@
 <script setup>
 import { ref, watch, computed, onMounted, onUnmounted } from 'vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { motion } from 'motion-v';
 import { useTheme } from '@/composables/useTheme';
+import { useCart } from '@/composables/useCart';
+import CartDrawer from '@/Components/Global/CartDrawer.vue';
 
 const { isDark, setDark, setLight } = useTheme();
+const { count: cartCount, openCart } = useCart();
+
+const searchQuery = ref('');
+
+const submitSearch = () => {
+    const q = searchQuery.value.trim();
+    router.visit(q ? `/courses?search=${encodeURIComponent(q)}` : '/courses');
+};
 
 const page        = usePage();
 const scrolled    = ref(false);
@@ -53,16 +63,16 @@ const isActive = (item) => {
         :animate="{ y: 0, opacity: 1 }"
         :transition="{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }"
         class="fixed inset-x-0 top-0 z-50 transition-all duration-500"
-        :class="scrolled ? 'pt-2' : 'pt-5'"
+        :class="scrolled
+            ? (isDark
+                ? 'glass-strong shadow-[0_10px_30px_-18px_rgba(34,211,238,0.35)]'
+                : 'glass-strong shadow-[0_10px_30px_-18px_rgba(99,102,241,0.22)]')
+            : 'glass'"
     >
-        <div class="mx-auto max-w-7xl px-4 sm:px-6">
+        <div class="mx-auto w-full px-4 sm:px-6 lg:px-10">
             <div
-                class="flex items-center justify-between gap-6 rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5 transition-all duration-500"
-                :class="scrolled
-                    ? (isDark
-                        ? 'glass-strong shadow-[0_10px_40px_-15px_rgba(34,211,238,0.25)]'
-                        : 'glass-strong shadow-[0_10px_40px_-15px_rgba(99,102,241,0.18)]')
-                    : 'glass'"
+                class="flex items-center justify-between gap-6 transition-all duration-500"
+                :class="scrolled ? 'py-2.5 sm:py-3' : 'py-3.5 sm:py-4'"
             >
                 <!-- Logo -->
                 <Link href="/" class="group flex items-center gap-2.5">
@@ -137,17 +147,54 @@ const isActive = (item) => {
                         </button>
                     </div>
 
-                    <!-- Book a Call (desktop only) -->
-                    <a
-                        href="#contact"
-                        class="group relative hidden items-center gap-2 overflow-hidden rounded-xl border border-cyan-300/20 bg-gradient-to-br from-cyan-400/15 to-teal-400/5 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_0_1px_rgba(34,211,238,0.05)_inset] transition hover:border-cyan-300/40 hover:shadow-[0_0_30px_-6px_rgba(34,211,238,0.5)] sm:flex"
+                    <!-- Cart -->
+                    <button
+                        @click="openCart"
+                        class="relative grid h-9 w-9 place-items-center rounded-xl glass transition hover:border-white/20 text-white/80"
+                        aria-label="Open cart"
                     >
-                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></span>
-                        Book a Call
-                        <svg class="h-3.5 w-3.5 transition group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10h12m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                         </svg>
-                    </a>
+                        <span
+                            v-if="cartCount > 0"
+                            class="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-cyan-400 px-1 font-mono text-[9px] font-bold shadow-[0_0_10px_rgba(34,211,238,0.6)]"
+                            :class="isDark ? 'text-[#05070d]' : 'text-[#ffffff]'"
+                            aria-live="polite"
+                        >
+                            {{ cartCount }}
+                        </span>
+                    </button>
+
+                    <!-- Search (desktop) -->
+                    <form
+                        @submit.prevent="submitSearch"
+                        class="group relative hidden items-center rounded-xl glass pl-3 pr-1.5 transition focus-within:border-cyan-300/30 focus-within:shadow-[0_0_0_3px_rgba(34,211,238,0.08)] sm:flex"
+                        role="search"
+                    >
+                        <svg class="h-4 w-4 flex-none text-white/45 transition group-focus-within:text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"/>
+                            <path d="m21 21-4.3-4.3"/>
+                        </svg>
+                        <input
+                            v-model="searchQuery"
+                            type="search"
+                            placeholder="Search courses…"
+                            aria-label="Search courses"
+                            class="w-24 bg-transparent px-2.5 py-2 text-sm text-white placeholder:text-white/35 focus:outline-none md:w-32 xl:w-40"
+                        />
+                        <button
+                            type="submit"
+                            class="grid h-7 w-7 flex-none place-items-center rounded-lg text-white/50 transition hover:bg-white/10 hover:text-cyan-300"
+                            aria-label="Search"
+                        >
+                            <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none">
+                                <path d="M4 10h12m0 0-4-4m4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </form>
 
                     <!-- Hamburger (mobile only) -->
                     <button
@@ -245,6 +292,9 @@ const isActive = (item) => {
             </div>
         </Transition>
     </Teleport>
+
+    <!-- ─── Cart drawer ────────────────────────────────────────── -->
+    <CartDrawer />
 </template>
 
 <style scoped>
