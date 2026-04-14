@@ -7,11 +7,10 @@ function applyTheme(dark) {
     document.documentElement.classList.toggle('light', !dark);
 }
 
+// Always default to dark; only respect a user's saved preference
 try {
     const stored = localStorage.getItem('theme');
-    isDark.value = stored
-        ? stored === 'dark'
-        : !window.matchMedia('(prefers-color-scheme: light)').matches;
+    isDark.value = stored ? stored === 'dark' : true;
 } catch {}
 
 applyTheme(isDark.value);
@@ -24,6 +23,7 @@ watch(isDark, (val) => {
 export function useTheme() {
     return {
         isDark,
-        toggleTheme: () => { isDark.value = !isDark.value; },
+        setDark:  () => { isDark.value = true; },
+        setLight: () => { isDark.value = false; },
     };
 }
