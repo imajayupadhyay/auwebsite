@@ -1,0 +1,165 @@
+@import 'tailwindcss';
+
+@source '../**/*.blade.php';
+@source '../**/*.vue';
+@source '../**/*.js';
+
+@theme {
+    --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    --color-ink-950: #05070d;
+    --color-ink-900: #0a0e1a;
+    --color-ink-800: #10172a;
+    --color-ink-700: #1a2440;
+
+    --color-cyan-glow: #22d3ee;
+    --color-teal-glow: #2dd4bf;
+    --color-amber-spark: #f59e0b;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: var(--color-ink-950);
+        color: rgb(255 255 255 / 0.9);
+        font-family: var(--font-sans);
+        font-feature-settings: 'ss01', 'ss02', 'cv11';
+        -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+        background-color: rgb(34 211 238 / 0.3);
+        color: white;
+    }
+}
+
+/* ─── Smooth theme transition ─────────────────────────────── */
+*, *::before, *::after {
+    transition-property: background-color, border-color, color, box-shadow;
+    transition-duration: 0.25s;
+    transition-timing-function: ease;
+}
+
+@layer utilities {
+    .glass {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.06) 0%,
+            rgba(255, 255, 255, 0.02) 100%
+        );
+        backdrop-filter: blur(20px) saturate(140%);
+        -webkit-backdrop-filter: blur(20px) saturate(140%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-strong {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.03) 100%
+        );
+        backdrop-filter: blur(24px) saturate(160%);
+        -webkit-backdrop-filter: blur(24px) saturate(160%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .text-gradient-cyan {
+        background: linear-gradient(135deg, #e0f2fe 0%, #22d3ee 50%, #2dd4bf 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .noise {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT THEME — Full glass mode
+   Applied when <html class="light">
+   ═══════════════════════════════════════════════════════════ */
+
+html.light body {
+    background-color: #eef2ff;
+    color: rgba(15, 23, 42, 0.9);
+}
+
+html.light ::selection {
+    background-color: rgb(99 102 241 / 0.2);
+    color: #0f172a;
+}
+
+/* Glass utilities */
+html.light .glass {
+    background: linear-gradient(135deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.48) 100%);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.88);
+    box-shadow: 0 4px 24px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.04);
+}
+
+html.light .glass-strong {
+    background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.72) 100%);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.96);
+    box-shadow: 0 8px 32px rgba(15,23,42,0.08), 0 2px 8px rgba(15,23,42,0.04);
+}
+
+/* Gradient text */
+html.light .text-gradient-cyan {
+    background: linear-gradient(135deg, #0f172a 0%, #0078D4 55%, #0891b2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ── White text → dark text ──────────────────────────────── */
+html.light .text-white          { color: #0f172a; }
+html.light .text-white\/20      { color: rgba(15,23,42,0.20); }
+html.light .text-white\/30      { color: rgba(15,23,42,0.30); }
+html.light .text-white\/35      { color: rgba(15,23,42,0.35); }
+html.light .text-white\/40      { color: rgba(15,23,42,0.40); }
+html.light .text-white\/50      { color: rgba(15,23,42,0.50); }
+html.light .text-white\/60      { color: rgba(15,23,42,0.60); }
+html.light .text-white\/65      { color: rgba(15,23,42,0.65); }
+html.light .text-white\/70      { color: rgba(15,23,42,0.70); }
+html.light .text-white\/75      { color: rgba(15,23,42,0.75); }
+html.light .text-white\/80      { color: rgba(15,23,42,0.80); }
+html.light .text-white\/90      { color: rgba(15,23,42,0.90); }
+
+/* ── White borders → slate borders ───────────────────────── */
+html.light .border-white\/5     { border-color: rgba(15,23,42,0.07); }
+html.light .border-white\/8     { border-color: rgba(15,23,42,0.09); }
+html.light .border-white\/10    { border-color: rgba(15,23,42,0.11); }
+html.light .border-white\/12    { border-color: rgba(15,23,42,0.13); }
+html.light .border-white\/15    { border-color: rgba(15,23,42,0.16); }
+html.light .border-white\/20    { border-color: rgba(15,23,42,0.20); }
+
+/* ── White bg tints → dark tints ─────────────────────────── */
+html.light .bg-white\/5         { background-color: rgba(15,23,42,0.04); }
+html.light .bg-white\/10        { background-color: rgba(15,23,42,0.07); }
+
+/* Stat cell background in hero */
+html.light .bg-ink-950\/20      { background-color: rgba(255,255,255,0.55); }
+
+/* Placeholder text in inputs */
+html.light .placeholder\:text-white\/40::placeholder {
+    color: rgba(15,23,42,0.35);
+}
+
+/* Hover bg tints */
+html.light .hover\:bg-white\/5:hover { background-color: rgba(15,23,42,0.04); }
+
+/* Cyan accent tweaks on light bg — keep readable */
+html.light .text-cyan-300\/70   { color: rgba(2,132,199,0.85); }
+html.light .text-cyan-300\/80   { color: rgba(2,132,199,0.90); }
+html.light .text-amber-200\/80  { color: rgba(146,64,14,0.85); }
+html.light .border-amber-spark\/30 { border-color: rgba(180,83,9,0.30); }
+html.light .bg-amber-spark\/10  { background-color: rgba(245,158,11,0.12); }
