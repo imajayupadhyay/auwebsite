@@ -7,36 +7,38 @@ import Footer      from '@/Components/Global/Footer.vue';
 import SearchFilters from './components/SearchFilters.vue';
 import CourseCard    from './components/CourseCard.vue';
 import { useTheme } from '@/composables/useTheme';
-import { courses as allCourses } from '@/data/courses';
 
 const props = defineProps({
-    search: { type: String, default: '' },
+    courses:    { type: Array,  default: () => [] },
+    categories: { type: Array,  default: () => [] },
+    stats:      { type: Object, default: () => ({}) },
 });
 
 const { isDark } = useTheme();
 
 // ── Filter state ───────────────────────────────────────────
-const search         = ref(props.search);
+const search         = ref('');
 const activeCategory = ref('All');
 const activeLevel    = ref('All');
 
-const categories = ['All', 'Cloud', 'Containers', 'CI/CD', 'IaC'];
-const levels     = ['All', 'Beginner', 'Intermediate', 'Advanced', 'All levels'];
+const categoryOptions = computed(() => ['All', ...props.categories]);
+const levels = ['All', 'Beginner', 'Intermediate', 'Advanced', 'All levels'];
 
 const hasActiveFilter = computed(() =>
     search.value !== '' || activeCategory.value !== 'All' || activeLevel.value !== 'All',
 );
 
 const filteredCourses = computed(() =>
-    allCourses.filter(c => {
+    props.courses.filter(c => {
         const q = search.value.toLowerCase();
         const matchesSearch = !q
             || c.title.toLowerCase().includes(q)
-            || c.subtitle.toLowerCase().includes(q)
-            || c.tags.some(t => t.toLowerCase().includes(q));
+            || (c.subtitle ?? '').toLowerCase().includes(q)
+            || (c.tags ?? []).some(t => t.toLowerCase().includes(q));
 
-        const matchesCategory = activeCategory.value === 'All' || c.category === activeCategory.value;
-        const matchesLevel    = activeLevel.value    === 'All' || c.level    === activeLevel.value;
+        const matchesCategory = activeCategory.value === 'All'
+            || (c.categories ?? []).some(cat => cat.name === activeCategory.value);
+        const matchesLevel = activeLevel.value === 'All' || c.level === activeLevel.value;
 
         return matchesSearch && matchesCategory && matchesLevel;
     }),
@@ -47,10 +49,6 @@ const resetFilters = () => {
     activeCategory.value = 'All';
     activeLevel.value    = 'All';
 };
-
-// ── Summary stats ──────────────────────────────────────────
-const totalHours   = allCourses.reduce((s, c) => s + c.hours,   0);
-const totalModules = allCourses.reduce((s, c) => s + c.modules, 0);
 </script>
 
 <template>
@@ -188,17 +186,17 @@ const totalModules = allCourses.reduce((s, c) => s + c.modules, 0);
                             class="flex items-center gap-6 lg:pb-1"
                         >
                             <div class="text-center">
-                                <div class="font-display text-3xl font-semibold text-white">{{ allCourses.length }}</div>
+                                <div class="font-display text-3xl font-semibold text-white">{{ stats.total }}</div>
                                 <div class="mt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">Courses</div>
                             </div>
                             <div class="h-8 w-px bg-white/10"></div>
                             <div class="text-center">
-                                <div class="font-display text-3xl font-semibold text-white">{{ totalHours }}+</div>
+                                <div class="font-display text-3xl font-semibold text-white">{{ stats.totalHours }}+</div>
                                 <div class="mt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">Hours</div>
                             </div>
                             <div class="h-8 w-px bg-white/10"></div>
                             <div class="text-center">
-                                <div class="font-display text-3xl font-semibold text-white">{{ totalModules }}</div>
+                                <div class="font-display text-3xl font-semibold text-white">{{ stats.totalModules }}</div>
                                 <div class="mt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">Modules</div>
                             </div>
                         </motion.div>
@@ -218,10 +216,10 @@ const totalModules = allCourses.reduce((s, c) => s + c.modules, 0);
                             v-model:search="search"
                             v-model:activeCategory="activeCategory"
                             v-model:activeLevel="activeLevel"
-                            :categories="categories"
+                            :categories="categoryOptions"
                             :levels="levels"
                             :resultCount="filteredCourses.length"
-                            :totalCount="allCourses.length"
+                            :totalCount="courses.length"
                             :hasActiveFilter="hasActiveFilter"
                             @reset="resetFilters"
                         />

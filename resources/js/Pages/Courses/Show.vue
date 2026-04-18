@@ -7,43 +7,40 @@ import Header from '@/Components/Global/Header.vue';
 import Footer from '@/Components/Global/Footer.vue';
 import { useTheme } from '@/composables/useTheme';
 import { useCart } from '@/composables/useCart';
-import { getCourseBySlug } from '@/data/courses';
 
 const props = defineProps({
-    slug: { type: String, required: true },
+    course: { type: Object, default: null },
 });
 
 const { isDark } = useTheme();
 const { addItem, has, openCart } = useCart();
-
-const course = computed(() => getCourseBySlug(props.slug));
 
 const openModule = ref(0);
 const toggleModule = (i) => {
     openModule.value = openModule.value === i ? -1 : i;
 };
 
-const inCart = computed(() => (course.value ? has(course.value.slug) : false));
+const inCart = computed(() => (props.course ? has(props.course.slug) : false));
 
 const discountPct = computed(() => {
-    if (!course.value?.originalPrice) return 0;
-    return Math.round(((course.value.originalPrice - course.value.price) / course.value.originalPrice) * 100);
+    if (!props.course?.original_price) return 0;
+    return Math.round(((props.course.original_price - props.course.price) / props.course.original_price) * 100);
 });
 
 const totalLessons = computed(() =>
-    (course.value?.curriculum || []).reduce((s, m) => s + (m.lessons?.length || 0), 0),
+    (props.course?.modules || []).reduce((s, m) => s + (m.lessons?.length || 0), 0),
 );
 
 const inr = (n) => `₹${(n ?? 0).toLocaleString('en-IN')}`;
 
 const onAddToCart = () => {
-    if (!course.value || !course.value.available) return;
-    addItem(course.value);
+    if (!props.course || !props.course.available) return;
+    addItem(props.course);
 };
 
 const onEnrollNow = () => {
-    if (!course.value || !course.value.available) return;
-    if (!inCart.value) addItem(course.value);
+    if (!props.course || !props.course.available) return;
+    if (!inCart.value) addItem(props.course);
     openCart();
 };
 
@@ -61,6 +58,7 @@ const ease = [0.22, 1, 0.36, 1];
                     : `${course.title} — hands-on DevOps and cloud course by Ajay Upadhyay.`)
                 : 'Course not found — browse all DevOps and cloud courses by Ajay Upadhyay.'"
         />
+
     </Head>
 
     <div
@@ -171,8 +169,8 @@ const ease = [0.22, 1, 0.36, 1];
                             <div class="min-w-0 flex-1">
                                 <div class="flex flex-wrap items-center gap-2">
                                     <span class="inline-flex items-center gap-1.5 rounded-full glass px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-cyan-300/80">
-                                        <span class="h-1 w-1 rounded-full" :style="{ backgroundColor: course.dot }"></span>
-                                        {{ course.code }} · {{ course.category }}
+                                        <span class="h-1 w-1 rounded-full" :style="{ backgroundColor: course.dot_color }"></span>
+                                        {{ course.code }} · {{ course.categories?.[0]?.name ?? '' }}
                                     </span>
                                     <span
                                         v-if="!course.available"
@@ -201,7 +199,7 @@ const ease = [0.22, 1, 0.36, 1];
                                     <span class="hidden sm:block">·</span>
                                     <span>{{ course.level }}</span>
                                     <span class="hidden sm:block">·</span>
-                                    <span>{{ course.modules }} modules</span>
+                                    <span>{{ course.modules_count }} modules</span>
                                     <span class="hidden sm:block">·</span>
                                     <span>{{ course.hours }}h total</span>
                                     <span class="hidden sm:block">·</span>
@@ -274,7 +272,7 @@ const ease = [0.22, 1, 0.36, 1];
 
                                 <!-- Curriculum -->
                                 <motion.section
-                                    v-if="course.curriculum?.length"
+                                    v-if="course.modules?.length"
                                     :initial="{ opacity: 0, y: 16 }"
                                     :whileInView="{ opacity: 1, y: 0 }"
                                     :viewport="{ once: true, margin: '-50px' }"
@@ -287,15 +285,15 @@ const ease = [0.22, 1, 0.36, 1];
                                                 <h2 class="font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-300/80">Curriculum</h2>
                                             </div>
                                             <p class="mt-3 font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                                                {{ course.curriculum.length }} modules · {{ totalLessons }} lessons
+                                                {{ course.modules.length }} modules · {{ totalLessons }} lessons
                                             </p>
                                         </div>
                                     </div>
 
                                     <div class="mt-6 overflow-hidden rounded-2xl glass divide-y divide-white/5">
                                         <div
-                                            v-for="(mod, i) in course.curriculum"
-                                            :key="mod.title"
+                                            v-for="(mod, i) in course.modules"
+                                            :key="mod.id"
                                         >
                                             <button
                                                 type="button"
@@ -330,11 +328,11 @@ const ease = [0.22, 1, 0.36, 1];
                                                     <ul class="ml-12 space-y-2.5 border-l border-white/10 pl-5">
                                                         <li
                                                             v-for="lesson in mod.lessons"
-                                                            :key="lesson"
+                                                            :key="lesson.id"
                                                             class="relative text-sm text-white/65"
                                                         >
                                                             <span class="absolute -left-[1.4rem] top-[0.55rem] h-1.5 w-1.5 rounded-full bg-cyan-300/60"></span>
-                                                            {{ lesson }}
+                                                            {{ lesson.title }}
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -382,10 +380,10 @@ const ease = [0.22, 1, 0.36, 1];
                                             {{ inr(course.price) }}
                                         </span>
                                         <span
-                                            v-if="course.originalPrice && course.originalPrice > course.price"
+                                            v-if="course.original_price && course.original_price > course.price"
                                             class="mb-1 font-mono text-sm text-white/35 line-through"
                                         >
-                                            {{ inr(course.originalPrice) }}
+                                            {{ inr(course.original_price) }}
                                         </span>
                                     </div>
                                     <div
@@ -465,7 +463,7 @@ const ease = [0.22, 1, 0.36, 1];
                                                 </svg>
                                                 Modules
                                             </dt>
-                                            <dd class="font-mono text-white/80">{{ course.modules }}</dd>
+                                            <dd class="font-mono text-white/80">{{ course.modules_count }}</dd>
                                         </div>
                                         <div class="flex items-center justify-between">
                                             <dt class="flex items-center gap-2 text-white/55">
@@ -485,7 +483,7 @@ const ease = [0.22, 1, 0.36, 1];
                                                 </svg>
                                                 Updated
                                             </dt>
-                                            <dd class="text-white/80">{{ course.lastUpdated }}</dd>
+                                            <dd class="text-white/80">{{ course.last_updated_text }}</dd>
                                         </div>
                                     </dl>
 

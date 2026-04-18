@@ -8,6 +8,10 @@ import Footer from '@/Components/Global/Footer.vue';
 import Hero from './components/Hero.vue';
 import Courses from './components/Courses.vue';
 import Services from './components/Services.vue';
+
+defineProps({
+    courses: { type: Array, default: () => [] },
+});
 </script>
 
 <template>
@@ -125,7 +129,7 @@ import Services from './components/Services.vue';
 
         <main class="relative">
             <Hero />
-            <Courses />
+            <Courses :courses="courses" />
             <Services />
         </main>
 

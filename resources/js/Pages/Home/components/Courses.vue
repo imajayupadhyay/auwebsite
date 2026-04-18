@@ -3,80 +3,9 @@ import { motion } from 'motion-v';
 import { Link } from '@inertiajs/vue3';
 import { Icon } from '@iconify/vue';
 
-const courses = [
-    {
-        code: 'AZ-01',
-        title: 'Microsoft Azure',
-        subtitle: 'Resilient systems on Azure ecosystem',
-        level: 'Intermediate',
-        modules: 12,
-        hours: 32,
-        dot: '#0078D4',
-        icon: 'logos:microsoft-azure',
-        available: true,
-        slug: 'microsoft-azure',
-    },
-    {
-        code: 'AWS-01',
-        title: 'AWS Cloud',
-        subtitle: 'From EC2 to EKS — production patterns',
-        level: 'Intermediate',
-        modules: 14,
-        hours: 38,
-        dot: '#FF9900',
-        icon: 'logos:aws',
-        available: false,
-        slug: 'aws-cloud',
-    },
-    {
-        code: 'GCP-01',
-        title: 'Google Cloud',
-        subtitle: 'GCP for engineers who want to ship',
-        level: 'Beginner',
-        modules: 10,
-        hours: 26,
-        dot: '#4285F4',
-        icon: 'logos:google-cloud',
-        available: false,
-        slug: 'google-cloud',
-    },
-    {
-        code: 'K8S-01',
-        title: 'Docker · Kubernetes',
-        subtitle: 'Container orchestration at scale',
-        level: 'Advanced',
-        modules: 16,
-        hours: 44,
-        dot: '#326CE5',
-        icon: 'logos:kubernetes',
-        available: false,
-        slug: 'docker-kubernetes',
-    },
-    {
-        code: 'JNK-01',
-        title: 'Jenkins CI/CD',
-        subtitle: 'Pipelines that stay green at 2 AM',
-        level: 'All levels',
-        modules: 9,
-        hours: 22,
-        dot: '#D33833',
-        icon: 'logos:jenkins',
-        available: false,
-        slug: 'jenkins-cicd',
-    },
-    {
-        code: 'TF-01',
-        title: 'Terraform',
-        subtitle: 'Infrastructure as code, done right',
-        level: 'Intermediate',
-        modules: 11,
-        hours: 28,
-        dot: '#7B42BC',
-        icon: 'logos:terraform-icon',
-        available: false,
-        slug: 'terraform',
-    },
-];
+defineProps({
+    courses: { type: Array, default: () => [] },
+});
 </script>
 
 <template>
@@ -123,7 +52,7 @@ const courses = [
                     <div
                         v-if="c.available"
                         class="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
-                        :style="{ background: `radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), ${c.dot}22, transparent 60%)` }"
+                        :style="{ background: `radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), ${c.dot_color}22, transparent 60%)` }"
                     ></div>
 
                     <Link
@@ -165,11 +94,11 @@ const courses = [
                     <div class="relative mt-7 flex items-center justify-between border-t border-white/5 pt-5">
                         <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.15em] text-white/50">
                             <span class="flex items-center gap-1.5">
-                                <span class="h-1 w-1 rounded-full" :style="{ backgroundColor: c.dot }"></span>
+                                <span class="h-1 w-1 rounded-full" :style="{ backgroundColor: c.dot_color }"></span>
                                 {{ c.level }}
                             </span>
                             <span>·</span>
-                            <span>{{ c.modules }} mods</span>
+                            <span>{{ c.modules_count }} mods</span>
                             <span>·</span>
                             <span>{{ c.hours }}h</span>
                         </div>

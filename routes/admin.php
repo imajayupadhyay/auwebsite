@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\ContactsController;
+use App\Http\Controllers\Admin\CourseLessonsController;
+use App\Http\Controllers\Admin\CourseModulesController;
+use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
@@ -28,4 +32,28 @@ Route::middleware('admin')
         Route::post('/users', [UsersController::class, 'store'])->name('users.store');
         Route::patch('/users/{user}', [UsersController::class, 'update'])->name('users.update');
         Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
+
+        // Categories
+        Route::get('/categories', [CategoriesController::class, 'index'])->name('categories.index');
+        Route::post('/categories', [CategoriesController::class, 'store'])->name('categories.store');
+        Route::patch('/categories/{category}', [CategoriesController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{category}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
+
+        // Courses
+        Route::get('/courses', [CoursesController::class, 'index'])->name('courses.index');
+        Route::get('/courses/create', [CoursesController::class, 'create'])->name('courses.create');
+        Route::post('/courses', [CoursesController::class, 'store'])->name('courses.store');
+        Route::get('/courses/{course}/edit', [CoursesController::class, 'edit'])->name('courses.edit');
+        Route::patch('/courses/{course}', [CoursesController::class, 'update'])->name('courses.update');
+        Route::delete('/courses/{course}', [CoursesController::class, 'destroy'])->name('courses.destroy');
+
+        // Course modules
+        Route::post('/courses/{course}/modules', [CourseModulesController::class, 'store'])->name('modules.store');
+        Route::patch('/modules/{module}', [CourseModulesController::class, 'update'])->name('modules.update');
+        Route::delete('/modules/{module}', [CourseModulesController::class, 'destroy'])->name('modules.destroy');
+
+        // Course lessons
+        Route::post('/modules/{module}/lessons', [CourseLessonsController::class, 'store'])->name('lessons.store');
+        Route::patch('/lessons/{lesson}', [CourseLessonsController::class, 'update'])->name('lessons.update');
+        Route::delete('/lessons/{lesson}', [CourseLessonsController::class, 'destroy'])->name('lessons.destroy');
     });

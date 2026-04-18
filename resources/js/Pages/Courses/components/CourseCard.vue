@@ -26,7 +26,7 @@ defineProps({
         <div
             v-if="course.available"
             class="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-500 group-hover:opacity-100"
-            :style="{ background: `radial-gradient(380px circle at 50% 0%, ${course.dot}20, transparent 65%)` }"
+            :style="{ background: `radial-gradient(380px circle at 50% 0%, ${course.dot_color}20, transparent 65%)` }"
         />
 
         <!-- Stretched link for available courses -->
@@ -86,11 +86,11 @@ defineProps({
         <div class="relative mt-6 flex items-center justify-between border-t border-white/5 pt-5">
             <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.15em] text-white/50">
                 <span class="flex items-center gap-1.5">
-                    <span class="h-1 w-1 rounded-full" :style="{ backgroundColor: course.dot }"></span>
+                    <span class="h-1 w-1 rounded-full" :style="{ backgroundColor: course.dot_color }"></span>
                     {{ course.level }}
                 </span>
                 <span>·</span>
-                <span>{{ course.modules }} mods</span>
+                <span>{{ course.modules_count }} mods</span>
                 <span>·</span>
                 <span>{{ course.hours }}h</span>
             </div>
