@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,6 +18,8 @@ Route::get('/courses', function (Request $request) {
 Route::get('/portfolio', function () {
     return Inertia::render('Portfolio/Index');
 });
+
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/services', function () {
     return Inertia::render('Services/Index');
