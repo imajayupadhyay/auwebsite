@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        if (auth()->check() && auth()->user()->email === 'ajayupadhyaydevops@gmail.com') {
+        if (auth()->check() && auth()->user()->is_admin) {
             return redirect()->route('admin.dashboard');
         }
 
@@ -29,7 +29,7 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
         }
 
-        if (auth()->user()->email !== 'ajayupadhyaydevops@gmail.com') {
+        if (!auth()->user()->is_admin) {
             Auth::logout();
             return back()->withErrors(['email' => 'Access denied.'])->onlyInput('email');
         }
