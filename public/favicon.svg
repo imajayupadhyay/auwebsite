@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0e1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#050810;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22d3ee;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#2dd4bf;stop-opacity:0.3" />
+    </linearGradient>
+  </defs>
+  <!-- Background rounded square -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)" />
+  <!-- Border -->
+  <rect x="1" y="1" width="62" height="62" rx="13" fill="none" stroke="url(#border)" stroke-width="1.5" />
+  <!-- Subtle top glow -->
+  <ellipse cx="32" cy="4" rx="22" ry="8" fill="rgba(34,211,238,0.12)" />
+  <!-- AU text -->
+  <text
+    x="32"
+    y="44"
+    text-anchor="middle"
+    font-family="'JetBrains Mono', 'Courier New', monospace"
+    font-weight="700"
+    font-size="24"
+    letter-spacing="-1"
+    fill="#22d3ee"
+  >AU</text>
+</svg>

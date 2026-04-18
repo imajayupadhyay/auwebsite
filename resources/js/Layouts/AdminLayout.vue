@@ -1,4 +1,5 @@
 <script setup>
+import { Head } from '@inertiajs/vue3';
 import Sidebar from '@/Pages/Admin/components/Sidebar.vue';
 import Topbar from '@/Pages/Admin/components/Topbar.vue';
 
@@ -8,6 +9,10 @@ defineProps({
 </script>
 
 <template>
+    <Head>
+        <meta head-key="robots" name="robots" content="noindex, nofollow" />
+    </Head>
+
     <div class="min-h-screen antialiased" style="background: #05070d; color: rgba(255,255,255,0.88);">
         <Sidebar />
 

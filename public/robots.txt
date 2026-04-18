@@ -1,2 +1,5 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /ajayupadhyay-secure-login
+
+Sitemap: https://ajayupadhyay.com/sitemap.xml

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,3 +21,5 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 Route::get('/services', function () {
     return Inertia::render('Services/Index');
 });
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index']);

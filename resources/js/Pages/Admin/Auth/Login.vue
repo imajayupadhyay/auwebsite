@@ -20,7 +20,9 @@ const inputCls = [
 </script>
 
 <template>
-    <Head title="Admin Access" />
+    <Head title="Admin Access">
+        <meta head-key="robots" name="robots" content="noindex, nofollow" />
+    </Head>
 
     <div
         class="relative flex min-h-screen items-center justify-center p-4 antialiased"
