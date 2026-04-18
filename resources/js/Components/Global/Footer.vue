@@ -1,7 +1,24 @@
 <script setup>
+import { ref } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 import { useTheme } from '@/composables/useTheme';
+
 const year = new Date().getFullYear();
 const { isDark } = useTheme();
+
+const form = useForm({ email: '' });
+const subscribed = ref(false);
+
+const subscribe = () => {
+    if (form.processing) return;
+    form.post('/newsletter', {
+        preserveScroll: true,
+        onSuccess: () => {
+            subscribed.value = true;
+            form.reset();
+        },
+    });
+};
 
 const columns = [
     {
@@ -63,16 +80,36 @@ const socials = [
                         Practical DevOps courses and hands-on mentorship — taught by an engineer who's shipped to production across every major cloud.
                     </p>
 
-                    <form class="mt-8 flex max-w-md items-center gap-2 rounded-xl glass p-1.5 pl-4">
-                        <svg class="h-4 w-4 text-cyan-300/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v10H4z"/><path d="m4 7 8 6 8-6"/></svg>
-                        <input
-                            type="email"
-                            placeholder="you@engineer.dev"
-                            class="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
-                        />
-                        <button type="button" class="rounded-lg bg-cyan-400/90 px-3.5 py-2 text-xs font-semibold text-ink-900 transition hover:bg-cyan-300">
-                            Notify me
-                        </button>
+                    <!-- Success state -->
+                    <div v-if="subscribed" class="mt-8 flex max-w-md items-center gap-3 rounded-xl p-4" style="background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2);">
+                        <span class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-400">✓</span>
+                        <div>
+                            <p class="text-sm font-medium text-emerald-400">You're on the list!</p>
+                            <p class="font-mono text-[10px] text-white/45">I'll notify you when new courses drop.</p>
+                        </div>
+                    </div>
+
+                    <!-- Subscribe form -->
+                    <form v-else @submit.prevent="subscribe" class="mt-8 max-w-md">
+                        <div class="flex items-center gap-2 rounded-xl glass p-1.5 pl-4" :class="form.errors.email ? 'ring-1 ring-rose-400/40' : ''">
+                            <svg class="h-4 w-4 flex-shrink-0 text-cyan-300/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v10H4z"/><path d="m4 7 8 6 8-6"/></svg>
+                            <input
+                                v-model="form.email"
+                                type="email"
+                                placeholder="you@engineer.dev"
+                                required
+                                :disabled="form.processing"
+                                class="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-60"
+                            />
+                            <button
+                                type="submit"
+                                :disabled="form.processing"
+                                class="rounded-lg bg-cyan-400/90 px-3.5 py-2 text-xs font-semibold text-ink-900 transition hover:bg-cyan-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                            >
+                                {{ form.processing ? '...' : 'Notify me' }}
+                            </button>
+                        </div>
+                        <p v-if="form.errors.email" class="mt-2 font-mono text-[10px] text-rose-400">{{ form.errors.email }}</p>
                     </form>
 
                     <div class="mt-8 flex items-center gap-2">
@@ -106,7 +143,7 @@ const socials = [
 
             <div class="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/5 pt-6 text-xs text-white/40 sm:flex-row sm:items-center">
                 <div class="font-mono tracking-wide">
-                    © {{ year }} AJAY UPADHYAY · BUILT WITH LARAVEL + INERTIA
+                    © {{ year }} AJAY UPADHYAY · ALL RIGHTS RESERVED
                 </div>
                 <div class="flex items-center gap-2 font-mono">
                     <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]"></span>

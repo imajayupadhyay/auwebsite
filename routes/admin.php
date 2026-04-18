@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\CourseLessonsController;
 use App\Http\Controllers\Admin\CourseModulesController;
 use App\Http\Controllers\Admin\CoursesController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InquiriesController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +28,16 @@ Route::middleware('admin')
         Route::get('/contacts', [ContactsController::class, 'index'])->name('contacts.index');
         Route::patch('/contacts/{contact}/toggle-read', [ContactsController::class, 'toggleRead'])->name('contacts.toggleRead');
         Route::delete('/contacts/{contact}', [ContactsController::class, 'destroy'])->name('contacts.destroy');
+
+        // Service Inquiries
+        Route::get('/inquiries', [InquiriesController::class, 'index'])->name('inquiries.index');
+        Route::patch('/inquiries/{inquiry}/toggle-read', [InquiriesController::class, 'toggleRead'])->name('inquiries.toggleRead');
+        Route::delete('/inquiries/{inquiry}', [InquiriesController::class, 'destroy'])->name('inquiries.destroy');
+
+        // Newsletter
+        Route::get('/newsletter', [AdminNewsletterController::class, 'index'])->name('newsletter.index');
+        Route::patch('/newsletter/{subscriber}/toggle-active', [AdminNewsletterController::class, 'toggleActive'])->name('newsletter.toggleActive');
+        Route::delete('/newsletter/{subscriber}', [AdminNewsletterController::class, 'destroy'])->name('newsletter.destroy');
 
         // Users
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');

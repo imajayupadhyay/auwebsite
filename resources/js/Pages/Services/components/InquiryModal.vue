@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
+import { useForm } from '@inertiajs/vue3';
 import { useTheme } from '@/composables/useTheme';
 import { services, budgetOptions, timelineOptions } from '@/data/services';
 
@@ -12,7 +13,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-const form = ref({
+const form = useForm({
     service:  '',
     name:     '',
     email:    '',
@@ -23,9 +24,9 @@ const form = ref({
     details:  '',
 });
 
-const status = ref('idle');
+const sent = ref(false);
 
-const btnLabel = computed(() => (status.value === 'sending' ? 'Sending brief...' : 'Send brief'));
+const btnLabel = computed(() => (form.processing ? 'Sending brief...' : 'Send brief'));
 
 const inputCls = 'w-full rounded-xl glass px-4 py-3 font-sans text-sm text-white placeholder:text-white/35 outline-none transition focus:border-cyan-300/40 focus:shadow-[0_0_0_3px_rgba(34,211,238,0.08)]';
 const selectCls = inputCls + ' appearance-none pr-10 cursor-pointer';
@@ -36,11 +37,11 @@ watch(
     (open) => {
         document.body.style.overflow = open ? 'hidden' : '';
         if (open) {
-            status.value = 'idle';
+            sent.value = false;
             if (props.service?.title) {
-                form.value.service = props.service.title;
-            } else if (!form.value.service) {
-                form.value.service = '';
+                form.service = props.service.title;
+            } else if (!form.service) {
+                form.service = '';
             }
         }
     },
@@ -49,22 +50,21 @@ watch(
 const close = () => {
     emit('close');
     setTimeout(() => {
-        if (status.value === 'success') {
-            form.value = {
-                service: '', name: '', email: '', phone: '',
-                company: '', budget: '', timeline: '', details: '',
-            };
-            status.value = 'idle';
+        if (sent.value) {
+            form.reset();
+            sent.value = false;
         }
     }, 300);
 };
 
 const handleSubmit = () => {
-    if (status.value === 'sending') return;
-    status.value = 'sending';
-    setTimeout(() => {
-        status.value = 'success';
-    }, 900);
+    if (form.processing) return;
+    form.post('/service-inquiry', {
+        preserveScroll: true,
+        onSuccess: () => {
+            sent.value = true;
+        },
+    });
 };
 </script>
 
@@ -113,7 +113,7 @@ const handleSubmit = () => {
                     @click.stop
                 >
                     <!-- Success state -->
-                    <div v-if="status === 'success'" class="p-8 text-center sm:p-10">
+                    <div v-if="sent" class="p-8 text-center sm:p-10">
                         <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-400/30 bg-emerald-400/10">
                             <span class="text-2xl text-emerald-400">✓</span>
                         </div>
@@ -136,7 +136,7 @@ const handleSubmit = () => {
                     </div>
 
                     <!-- Form state -->
-                    <form v-else @submit.prevent="handleSubmit" autocomplete="off" novalidate>
+                    <form v-else @submit.prevent="handleSubmit" autocomplete="off" novalidate class="space-y-0">
                         <!-- Header -->
                         <div
                             class="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-white/5 px-5 py-4 sm:px-8 sm:py-5"
@@ -269,7 +269,7 @@ const handleSubmit = () => {
                             <!-- Submit -->
                             <button
                                 type="submit"
-                                :disabled="status === 'sending'"
+                                :disabled="form.processing"
                                 class="group mt-6 inline-flex w-full items-center justify-between gap-2 rounded-full px-5 py-3.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] transition disabled:cursor-not-allowed disabled:opacity-60"
                                 :class="isDark
                                     ? 'bg-white text-ink-900 shadow-[0_15px_40px_-12px_rgba(34,211,238,0.45)] hover:shadow-[0_15px_50px_-12px_rgba(34,211,238,0.65)]'
